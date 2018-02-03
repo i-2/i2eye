@@ -18,9 +18,6 @@ static VERSION: &str = "0.5.0";
 
 fn main() {
    env_logger::init();
-//    let addr = "0.0.0.0:3890".parse().unwrap();
-//    let server = hyper::server::Http::new().bind(&addr, || Ok(server::ImageService)).unwrap();
-//    server.run().unwrap();
    let application = App::new("i2eye")
                           .version(VERSION)
                           .author("sourcepirate")
