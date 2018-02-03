@@ -1,14 +1,14 @@
 [package]
 name = "i2eye"
-version = "0.1.0"
+version = "0.5.0"
 authors = ["sourcepirate <plasmashadowx@gmail.com>"]
 
 [dependencies]
 reqwest = "0.8.4"
 hyper = "0.11.15"
-serde = "1.0.27"
-serde_json = "1.0.9"
-serde_derive = "1.0.27"
 log = "0.4.1"
 env_logger = "0.5.3"
-time = "*"
+time = "0.1.39"
+futures = "0.1.18"
+url = "1.6.0"
+clap = "2.29.2"
