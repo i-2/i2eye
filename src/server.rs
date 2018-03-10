@@ -26,10 +26,11 @@ impl Service for ImageService {
         let map: HashMap<String, String> = form_urlencoded::parse(qs.as_bytes()).into_owned().collect();
         ok(match map.get("q") {
             Some(s) => {
+                let lang = map.get("lang");
                 if s.len() > 0 && Url::parse(s).is_ok() {
                     debug!("Trying to read url {}", s);
                     let mut builder = ImageBuilder::from_url(s);
-                    let possible_text: Option<String> = builder.reader().text();
+                    let possible_text: Option<String> = builder.reader().text(lang);
                     debug!("{:?}", possible_text);
                     Response::new().with_body(possible_text.unwrap())
                 } else {

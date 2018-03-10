@@ -9,12 +9,13 @@ use std::string::FromUtf8Error;
 use reqwest::{get, Response};
 use time::get_time;
 
-fn execute(path: String) -> Option<String> {
-    let output = Command::new("tesseract")
-        .arg(path)
-        .arg("stdout")
-        .output()
-        .unwrap();
+fn execute(path: String, lang: Option<&String>) -> Option<String> {
+    let mut cmd = Command::new("tesseract");
+    if lang.is_some(){
+        let lang_str : String = lang.unwrap().to_owned();
+        cmd.arg("-l").arg(lang_str.as_str());
+    }
+    let output = cmd.arg(path).arg("stdout").output().unwrap();
     match String::from_utf8(output.stdout) {
         Ok(st) => Some(st),
         Err(e) => None,
@@ -120,7 +121,7 @@ impl<T: Read> ImageReader<T> {
     }
 
 
-    pub fn text(&mut self) -> Option<String> {
+    pub fn text(&mut self, lang: Option<&String>) -> Option<String> {
         let mut temporary = self.tempfile();
         let path = temporary.path();
         let mut writer = BufWriter::new(temporary.into_file());
@@ -129,7 +130,7 @@ impl<T: Read> ImageReader<T> {
         writer.write_all(buff.as_slice());
         writer.flush();
         let tfile = writer.into_inner().unwrap();
-        execute(path)
+        execute(path, lang)
     }
 }
 
@@ -170,7 +171,7 @@ mod tests {
     fn test_image_reader_text() {
         let image = ImageBuilder::from_url("https://i.stack.imgur.com/t3qWG.png");
         let mut reader = image.reader();
-        let text = reader.text().unwrap();
+        let text = reader.text(None).unwrap();
         assert_ne!(text.len(), 0);
     }
 }
